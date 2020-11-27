@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
+const User = require("../models/UserModel.js");
 
-router.post('/auth/', (req, res) => {
-	res.sendStatus(200);
+router.post('/', (req, res) => {
+	
 });
 
 module.exports = router;
