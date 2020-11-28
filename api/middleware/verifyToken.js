@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 
 module.exports = function(req, res, next) {
-	const token = req.header('authToken');
+	const token = req.cookies.token;
 	if (!token) {
 		return res.status(401).json({
 			code: 401,

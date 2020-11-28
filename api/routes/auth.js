@@ -47,7 +47,7 @@ router.post('/', (req, res) => {
 						else {
 							if (valid) {
 								const token = jwt.sign({ id: doc._id, fullName: doc.fullName, username: doc.username, admin: doc.admin }, process.env.TOKEN_SECRET);
-								res.header('authToken', token);
+								res.cookie('token', token, { httpOnly: true });
 								res.status(200).json({
 									code: 200,
 									status: "OK",
