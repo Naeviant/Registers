@@ -3,7 +3,8 @@ const router = express.Router();
 
 router.get('/', (req, res) => {
 	res.json({
-		status: 200,
+		code: 200,
+		status: "OK",
 		message: "API Online",
 		data: []
 	});
