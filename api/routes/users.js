@@ -8,7 +8,9 @@ const admin = require('../middleware/verifyAdmin');
 const User = require("../models/UserModel");
 
 const userValidation = joi.object({
-	fullName: joi.string().required(),
+	firstName: joi.string().required(),
+	lastName: joi.string().required(),
+	title: joi.string().required(),
 	username: joi.string().required(),
 	password: joi.string().required(),
 	admin: joi.boolean().required()
@@ -36,7 +38,9 @@ router.post('/', auth, admin, (req, res) => {
 			}
 			else {
 				const newUser = new User({
-					fullName: req.body.fullName,
+					firstName: req.body.firstName,
+					lastName: req.body.lastName,
+					title: req.body.title,
 					username: req.body.username,
 					password: hash,
 					admin: req.body.admin

@@ -160,6 +160,14 @@ function TakeRegister() {
   return (
     <div className="TakeRegister">
       <table>
+        <thead>
+          <th>Name</th>
+          <th>1</th>
+          <th>2</th>
+          <th>3</th>
+          <th>4</th>
+          <th>5</th>
+        </thead>
         <tbody>
           { 
             state.students.map((student) => (
