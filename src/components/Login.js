@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useHistory, Redirect } from 'react-router-dom';
-import { Button, TextField, Snackbar } from '@material-ui/core';
+import { Button, TextField, Snackbar, CircularProgress } from '@material-ui/core';
 import MuiAlert from '@material-ui/lab/Alert';
 import { makeStyles } from '@material-ui/core/styles';
 import axios from 'axios';
@@ -27,8 +27,18 @@ function Login() {
     username: "",
     password: "",
     missing: false,
-    invalid: false
+    invalid: false,
+    loading: true,
+    loggedin: false
   });
+
+  useEffect(() => {
+    axios.get("/api/me").then(res => {
+      setState({...state, loading: false, loggedin: true });
+    }).catch(err => {
+      setState({...state, loading: false, loggedin: false });
+    });
+  }, []); 
 
   const missingClose = (e, reason) => {
     if (reason === "clickaway") {
@@ -63,6 +73,14 @@ function Login() {
         setState({ ...state, invalid: true });
       }
     });
+  }
+
+  if (state.loading) {
+    return <CircularProgress />;
+  }
+
+  if (state.loggedin) {
+    return <Redirect to="/" />;
   }
 
   return (
