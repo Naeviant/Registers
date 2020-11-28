@@ -3,16 +3,18 @@ const router = express.Router();
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 const joi = require('joi');
-const User = require("../models/UserModel.js");
+const auth = require('../middleware/verifyToken');
+const admin = require('../middleware/verifyAdmin');
+const User = require("../models/UserModel");
 
 const userValidation = joi.object({
 	fullName: joi.string().required(),
 	username: joi.string().required(),
 	password: joi.string().required(),
-	admin: joi.boolean().required(),
+	admin: joi.boolean().required()
 });
 
-router.post('/', (req, res) => {
+router.post('/', auth, admin, (req, res) => {
 	const validation = userValidation.validate(req.body);
 	if (validation.error) {
 		res.status(400).json({
@@ -37,7 +39,7 @@ router.post('/', (req, res) => {
 					fullName: req.body.fullName,
 					username: req.body.username,
 					password: hash,
-					admin: (req.body.admin == "false")
+					admin: req.body.admin
 				});
 				newUser.save((err) => {
 					if (err) {
@@ -76,7 +78,7 @@ router.post('/', (req, res) => {
 	}
 });
 
-router.delete('/:id', (req, res) => {
+router.delete('/:id', auth, (req, res) => {
 	User.findByIdAndDelete(req.params.id, (err, doc) => {
 		if (err) {
 			res.status(500).json({
