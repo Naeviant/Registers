@@ -15,17 +15,21 @@ router.get("/", auth, (req, res) => {
 	Time.find({ week: diff }, async(err, docs) => {
 		const times = docs;
 
-		for (var i in times) {
-			await Lesson.findOne({ time: times[i]._id, teacher: req.user.id }, (err, docs) => {
-				let lesson = docs;
-				if (lesson) {
-					lesson.time = times[i];
-					lessons.push(lesson)
-				}
+		Lesson.find({ time: { "$in": times.map(function(x) { return x._id; }) }, teacher: req.user.id }, (err, docs) => {
+			var lessons = docs;
+			for (var i in lessons) {
+				const ids = times.map(function(x) { return x._id.toString() });
+				const time = lessons[i].time.toString();
+				lessons[i].time = times[ids.indexOf(time)];
+			}
+			lessons.sort(function(a, b) {          
+			  if (a.time.day === b.time.day) {
+			    return a.time.startTime > b.time.startTime ? 1 : -1;
+			  }
+			  return a.time.day > b.time.day ? 1 : -1;
 			});
-		}
-
-		res.json(lessons)
+			res.json(lessons)
+		});
 	});
 });
 

@@ -29,7 +29,33 @@ const Lesson = require("../models/LessonModel")
 const Time = require("../models/TimeModel")
 const Attendance = require("../models/AttendanceModel")
 router.get('/data', (req, res) => {
-
+	Time.find({}, async (err, docs) => {
+		const times = docs.map(function(x) { return x._id; });
+		User.find({}, (err, docs) => {
+			const staff = docs.map(function(x) { return x._id; });
+			var data = [];
+			for (var time of times) {
+				var a = Math.floor(Math.random() * 10);
+				while (true) {
+					var b = Math.floor(Math.random() * 10);
+					if (a != b) {
+						break;
+					}
+				}
+				for (var i in staff) {
+					if (i == a || i == b) {
+						continue;
+					}
+					data.push({
+						name: faker.random.word(),
+						time: time,
+						teacher: staff[i]
+					})
+				}
+			}
+			res.send(data)
+		});
+	});
 });
 
 router.use('/users', require('./users'));
